@@ -1,0 +1,74 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        //---------------------------------------------------------------------
+        // Standard debug build via Crtl-Shift-B
+		// by tomschrot
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args":
+            [
+                "build",
+                "${workspaceFolder}/Lab1.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+
+            "problemMatcher": "$msCompile",
+
+            "group":
+            {
+                "kind": "build",
+                "isDefault": true
+            },
+
+            "presentation":
+            {
+                "echo": false,
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        //---------------------------------------------------------------------
+        {
+            "label": "PUBLISH",
+            "command": "dotnet",
+            "type": "process",
+            "args":
+            [
+                "publish",
+                "${workspaceFolder}/Lab1.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "-c:Release",
+                //"-r:win-x64",
+                //"-p:PublishSingleFile=true",
+                //"-p:PublishTrimmed=true",
+                //"-p:TrimMode=link",
+                // "-p:PublishReadyToRun=true", //nativ!
+                //"-o:Y:/SERVICES/.tools"
+                "-o:${workspaceFolder}/bin/publish"
+            ],
+
+            "problemMatcher": "$msCompile",
+
+            "presentation":
+            {
+                "echo": false,
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        }
+        //---------------------------------------------------------------------
+    ]
+}
