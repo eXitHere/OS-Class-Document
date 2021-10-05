@@ -4,15 +4,20 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Problem01
 {
     class Program
     {
+        static int MAX = 1000000000;
         static byte[] Data_Global = new byte[1000000000];
-        static long[] Sum_Global = new long[]{0, 0, 0, 0};
-        static int G_index = 0;
+        static int N = 4;
         static Thread[] t = new Thread[4];
+        static long[] Sum_Global = new long[4];
+        static int G_index = 0;
 
         static int ReadData()
         {
@@ -97,9 +102,9 @@ namespace Problem01
             t[2].Start();
             t[3].Start();
 
-            // while(s[0] == false || s[1] == false) {
+            // // while(s[0] == false || s[1] == false) {
 
-            // }
+            // // }
 
             t[0].Join();
             t[1].Join();
@@ -109,11 +114,12 @@ namespace Problem01
             /* Start */
             // for (i = 0; i < 1000000000; i++)
             //     sum();
+
             sw.Stop();
             Console.WriteLine("Done.");
 
             /* Result */
-            Console.WriteLine("Summation result: {0}", Sum_Global[0] + Sum_Global[1] + Sum_Global[2] + Sum_Global[3]);
+            Console.WriteLine("Summation result: {0}", Sum_Global.Sum());
             Console.WriteLine("Time used: " + sw.ElapsedMilliseconds.ToString() + "ms");
         }
     }
