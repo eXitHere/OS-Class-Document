@@ -10,10 +10,9 @@ namespace Problem01
     class Program
     {
         static byte[] Data_Global = new byte[1000000000];
-        static long[] Sum_Global = new long[]{0, 0};
+        static long[] Sum_Global = new long[]{0, 0, 0, 0};
         static int G_index = 0;
-        static Thread t1, t2;
-        static Boolean[] s = new Boolean[]{false, false};
+        static Thread[] t = new Thread[4];
 
         static int ReadData()
         {
@@ -44,10 +43,7 @@ namespace Problem01
                 // Console.WriteLine(i);
                 sum(i, taskId);
             }
-
             Console.WriteLine(i);
-
-            s[taskId] = true;
         }
 
         static void sum(int index, int taskId)
@@ -91,19 +87,24 @@ namespace Problem01
             Console.Write("\n\nWorking...");
             sw.Start();
 
-            t1 = new Thread(()=>task(0, 0, 500000000));
-            t2 = new Thread(()=>task(1, 500000000, 1000000000));
+            t[0] = new Thread(()=>task(0, 0, 250000000));
+            t[1] = new Thread(()=>task(1, 250000000, 500000000));
+            t[2] = new Thread(()=>task(2, 500000000, 750000000));
+            t[3] = new Thread(()=>task(3, 750000000, 1000000000));
             
-            t1.Start();
-            t2.Start();
-
+            t[0].Start();
+            t[1].Start();
+            t[2].Start();
+            t[3].Start();
 
             // while(s[0] == false || s[1] == false) {
 
             // }
 
-            t1.Join();
-            t2.Join();
+            t[0].Join();
+            t[1].Join();
+            t[2].Join();
+            t[3].Join();
 
             /* Start */
             // for (i = 0; i < 1000000000; i++)
@@ -112,7 +113,7 @@ namespace Problem01
             Console.WriteLine("Done.");
 
             /* Result */
-            Console.WriteLine("Summation result: {0}", Sum_Global[0] + Sum_Global[1]);
+            Console.WriteLine("Summation result: {0}", Sum_Global[0] + Sum_Global[1] + Sum_Global[2] + Sum_Global[3]);
             Console.WriteLine("Time used: " + sw.ElapsedMilliseconds.ToString() + "ms");
         }
     }
