@@ -10,8 +10,10 @@ namespace Problem01
     class Program
     {
         static byte[] Data_Global = new byte[1000000000];
-        static long Sum_Global = 0;
+        static long[] Sum_Global = new long[]{0, 0};
         static int G_index = 0;
+        static Thread t1, t2;
+        static Boolean[] s = new Boolean[]{false, false};
 
         static int ReadData()
         {
@@ -35,26 +37,39 @@ namespace Problem01
 
             return returnData;
         }
-        static void sum()
+
+        static void task(int taskId, int start, int stop) {
+            int i = start;
+            for(; i<stop; i++) {
+                // Console.WriteLine(i);
+                sum(i, taskId);
+            }
+
+            Console.WriteLine(i);
+
+            s[taskId] = true;
+        }
+
+        static void sum(int index, int taskId)
         {
-            if (Data_Global[G_index] % 2 == 0)
+            if (Data_Global[index] % 2 == 0)
             {
-                Sum_Global -= Data_Global[G_index];
+                Sum_Global[taskId] -= Data_Global[index];
             }
-            else if (Data_Global[G_index] % 3 == 0)
+            else if (Data_Global[index] % 3 == 0)
             {
-                Sum_Global += (Data_Global[G_index]*2);
+                Sum_Global[taskId] += (Data_Global[index]*2);
             }
-            else if (Data_Global[G_index] % 5 == 0)
+            else if (Data_Global[index] % 5 == 0)
             {
-                Sum_Global += (Data_Global[G_index] / 2);
+                Sum_Global[taskId] += (Data_Global[index] / 2);
             }
-            else if (Data_Global[G_index] %7 == 0)
+            else if (Data_Global[index] %7 == 0)
             {
-                Sum_Global += (Data_Global[G_index] / 3);
+                Sum_Global[taskId] += (Data_Global[index] / 3);
             }
-            Data_Global[G_index] = 0;
-            G_index++;   
+            // Data_Global[index] = 0;
+            // G_index++;   
         }
         static void Main(string[] args)
         {
@@ -73,16 +88,31 @@ namespace Problem01
                 Console.WriteLine("Read Failed!");
             }
 
-            /* Start */
             Console.Write("\n\nWorking...");
             sw.Start();
-            for (i = 0; i < 1000000000; i++)
-                sum();
+
+            t1 = new Thread(()=>task(0, 0, 500000000));
+            t2 = new Thread(()=>task(1, 500000000, 1000000000));
+            
+            t1.Start();
+            t2.Start();
+
+
+            // while(s[0] == false || s[1] == false) {
+
+            // }
+
+            t1.Join();
+            t2.Join();
+
+            /* Start */
+            // for (i = 0; i < 1000000000; i++)
+            //     sum();
             sw.Stop();
             Console.WriteLine("Done.");
 
             /* Result */
-            Console.WriteLine("Summation result: {0}", Sum_Global);
+            Console.WriteLine("Summation result: {0}", Sum_Global[0] + Sum_Global[1]);
             Console.WriteLine("Time used: " + sw.ElapsedMilliseconds.ToString() + "ms");
         }
     }
