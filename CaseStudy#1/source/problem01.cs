@@ -46,9 +46,11 @@ namespace Problem01
 
             return returnData;
         }
-        static void sum(int taskId, int start, int stop)
+        static void sum(int taskId)
         {
-            int index = start;
+            int index = taskId * (MAX/N);
+            int stop  = (taskId+1) * (MAX/N);
+            Console.WriteLine("Spawning thread {0,-5} Start {1,-10} Stop {2,-10}", taskId, index, stop);
             Console.WriteLine("Thread {0} is working!", taskId);
             while(index != stop) {
                 if (Data_Global[index] % 2 == 0)
@@ -75,10 +77,7 @@ namespace Problem01
         static void CreateThreads()
         {
             int nThread = lstThreads.Count;
-            int start = nThread * (MAX/N);
-            int stop  = (nThread+1) * (MAX/N);
-            Console.WriteLine("Spawning thread {0,-5} Start {1,-10} Stop {2,-10}", nThread, start, stop);
-            Thread th = new Thread(() => { sum(nThread, start, stop); });
+            Thread th = new Thread(() => { sum(nThread); });
             th.Start();
             lstThreads.Add(th);
         }
@@ -89,7 +88,7 @@ namespace Problem01
             int i, y;
 
             /* Read data from file */
-            Console.Clear();
+            // Console.Clear();
 
             if(args.Count() == 1) {
                 N = int.Parse(args[0]);
