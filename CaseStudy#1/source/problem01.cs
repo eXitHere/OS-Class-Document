@@ -42,32 +42,36 @@ namespace Problem01
             return returnData;
         }
 
-        static void task(int taskId, int start, int stop) {
-            int i = start;
-            for(; i<stop; i++) {
-                // Console.WriteLine(i);
-                sum(i, taskId);
-            }
-            Console.WriteLine(i);
-        }
+        // static void task(int taskId, int start, int stop) {
+        //     int i = start;
+        //     for(; i<stop; i++) {
+        //         // Console.WriteLine(i);
+        //         sum(i, taskId);
+        //     }
+        //     Console.WriteLine(i);
+        // }
 
-        static void sum(int index, int taskId)
+        static void sum(int taskId, int start, int stop)
         {
-            if (Data_Global[index] % 2 == 0)
-            {
-                Sum_Global[taskId] -= Data_Global[index];
-            }
-            else if (Data_Global[index] % 3 == 0)
-            {
-                Sum_Global[taskId] += (Data_Global[index]*2);
-            }
-            else if (Data_Global[index] % 5 == 0)
-            {
-                Sum_Global[taskId] += (Data_Global[index] / 2);
-            }
-            else if (Data_Global[index] %7 == 0)
-            {
-                Sum_Global[taskId] += (Data_Global[index] / 3);
+            int index = start;
+            while(index != stop) {
+                if (Data_Global[index] % 2 == 0)
+                {
+                    Sum_Global[taskId] -= Data_Global[index];
+                }
+                else if (Data_Global[index] % 3 == 0)
+                {
+                    Sum_Global[taskId] += (Data_Global[index]*2);
+                }
+                else if (Data_Global[index] % 5 == 0)
+                {
+                    Sum_Global[taskId] += (Data_Global[index] / 2);
+                }
+                else if (Data_Global[index] %7 == 0)
+                {
+                    Sum_Global[taskId] += (Data_Global[index] / 3);
+                }
+                index += 1;
             }
             // Data_Global[index] = 0;
             // G_index++;   
@@ -92,10 +96,10 @@ namespace Problem01
             Console.Write("\n\nWorking...");
             sw.Start();
 
-            t[0] = new Thread(()=>task(0, 0, 250000000));
-            t[1] = new Thread(()=>task(1, 250000000, 500000000));
-            t[2] = new Thread(()=>task(2, 500000000, 750000000));
-            t[3] = new Thread(()=>task(3, 750000000, 1000000000));
+            t[0] = new Thread(()=>sum(0, 0, 250000000));
+            t[1] = new Thread(()=>sum(1, 250000000, 500000000));
+            t[2] = new Thread(()=>sum(2, 500000000, 750000000));
+            t[3] = new Thread(()=>sum(3, 750000000, 1000000000));
             
             t[0].Start();
             t[1].Start();
@@ -103,9 +107,6 @@ namespace Problem01
             t[3].Start();
 
             // // while(s[0] == false || s[1] == false) {
-
-            // // }
-
             t[0].Join();
             t[1].Join();
             t[2].Join();
@@ -117,6 +118,8 @@ namespace Problem01
 
             sw.Stop();
             Console.WriteLine("Done.");
+
+            // Task.waitAll(t[0]);
 
             /* Result */
             Console.WriteLine("Summation result: {0}", Sum_Global.Sum());
