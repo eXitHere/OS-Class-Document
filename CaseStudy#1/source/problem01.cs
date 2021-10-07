@@ -13,7 +13,7 @@ namespace Problem01
 
     static class Constants
     {
-        public const int N = 4;
+        public const int N = 8;
     }
 
     class Program
