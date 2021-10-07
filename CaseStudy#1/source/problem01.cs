@@ -49,6 +49,7 @@ namespace Problem01
         static void sum(int taskId, int start, int stop)
         {
             int index = start;
+            Console.WriteLine("Thread {0} is working!", taskId);
             while(index != stop) {
                 if (Data_Global[index] % 2 == 0)
                 {
@@ -66,6 +67,7 @@ namespace Problem01
                 {
                     Sum_Global[taskId] += (Data_Global[index] / 3);
                 }
+                Data_Global[index] = 0;
                 index += 1;
             }  
         }
@@ -77,15 +79,22 @@ namespace Problem01
             int stop  = (nThread+1) * (MAX/N);
             Console.WriteLine("Spawning thread {0,-5} Start {1,-10} Stop {2,-10}", nThread, start, stop);
             Thread th = new Thread(() => { sum(nThread, start, stop); });
+            th.Start();
             lstThreads.Add(th);
         }
         static void Main(string[] args)
         {
+            
             Stopwatch sw = new Stopwatch();
             int i, y;
 
             /* Read data from file */
             Console.Clear();
+
+            if(args.Count() == 1) {
+                N = int.Parse(args[0]);
+            }
+
             Console.Write("Data read...");
             y = ReadData();
             if (y == 0)
@@ -104,9 +113,6 @@ namespace Problem01
                 CreateThreads();
             }
 
-            foreach (Thread th in lstThreads) // start thread
-                th.Start();
-
             foreach (Thread th in lstThreads)
                 th.Join();
 
@@ -118,6 +124,9 @@ namespace Problem01
             /* Result */
             Console.WriteLine("Summation result: {0}", Sum_Global.Sum());
             Console.WriteLine("Time used: " + sw.ElapsedMilliseconds.ToString() + "ms");
+            
+            // using StreamWriter file = new("output.txt", append: true);
+            // file.WriteLineAsync(sw.ElapsedMilliseconds.ToString() + "ms");
         }
     }
 }
