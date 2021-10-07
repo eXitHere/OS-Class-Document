@@ -10,15 +10,20 @@ using System.Linq;
 
 namespace Problem01
 {
+
+    static class Constants
+    {
+        public const int N = 4;
+    }
+
     class Program
     {
+        static List<Thread> lstThreads = new List<Thread>();
+        static int N = Constants.N;
         static int MAX = 1000000000;
         static byte[] Data_Global = new byte[1000000000];
-        static int N = 4;
-        static Thread[] t = new Thread[4];
-        static long[] Sum_Global = new long[4];
+        static long[] Sum_Global = new long[Constants.N];
         static int G_index = 0;
-
         static int ReadData()
         {
             int returnData = 0;
@@ -41,16 +46,6 @@ namespace Problem01
 
             return returnData;
         }
-
-        // static void task(int taskId, int start, int stop) {
-        //     int i = start;
-        //     for(; i<stop; i++) {
-        //         // Console.WriteLine(i);
-        //         sum(i, taskId);
-        //     }
-        //     Console.WriteLine(i);
-        // }
-
         static void sum(int taskId, int start, int stop)
         {
             int index = start;
@@ -72,9 +67,17 @@ namespace Problem01
                     Sum_Global[taskId] += (Data_Global[index] / 3);
                 }
                 index += 1;
-            }
-            // Data_Global[index] = 0;
-            // G_index++;   
+            }  
+        }
+
+        static void CreateThreads()
+        {
+            int nThread = lstThreads.Count;
+            int start = nThread * (MAX/N);
+            int stop  = (nThread+1) * (MAX/N);
+            Console.WriteLine("Spawning thread {0,-5} Start {1,-10} Stop {2,-10}", nThread, start, stop);
+            Thread th = new Thread(() => { sum(nThread, start, stop); });
+            lstThreads.Add(th);
         }
         static void Main(string[] args)
         {
@@ -82,6 +85,7 @@ namespace Problem01
             int i, y;
 
             /* Read data from file */
+            Console.Clear();
             Console.Write("Data read...");
             y = ReadData();
             if (y == 0)
@@ -93,28 +97,18 @@ namespace Problem01
                 Console.WriteLine("Read Failed!");
             }
 
-            Console.Write("\n\nWorking...");
+            Console.Write("\n\nWorking...\n\n");
             sw.Start();
 
-            t[0] = new Thread(()=>sum(0, 0, 250000000));
-            t[1] = new Thread(()=>sum(1, 250000000, 500000000));
-            t[2] = new Thread(()=>sum(2, 500000000, 750000000));
-            t[3] = new Thread(()=>sum(3, 750000000, 1000000000));
-            
-            t[0].Start();
-            t[1].Start();
-            t[2].Start();
-            t[3].Start();
+            for(i=0;i<N;i++) { // create thread   
+                CreateThreads();
+            }
 
-            // // while(s[0] == false || s[1] == false) {
-            t[0].Join();
-            t[1].Join();
-            t[2].Join();
-            t[3].Join();
+            foreach (Thread th in lstThreads) // start thread
+                th.Start();
 
-            /* Start */
-            // for (i = 0; i < 1000000000; i++)
-            //     sum();
+            foreach (Thread th in lstThreads)
+                th.Join();
 
             sw.Stop();
             Console.WriteLine("Done.");
