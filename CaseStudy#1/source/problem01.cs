@@ -125,8 +125,11 @@ namespace Problem01
             Console.WriteLine("Summation result: {0}", Sum_Global.Sum());
             Console.WriteLine("Time used: " + sw.ElapsedMilliseconds.ToString() + "ms");
             
-            // using StreamWriter file = new("output.txt", append: true);
-            // file.WriteLineAsync(sw.ElapsedMilliseconds.ToString() + "ms");
+            if(args.Count() == 1) {
+                using StreamWriter file = new("output.txt");
+                file.WriteLineAsync(sw.ElapsedMilliseconds.ToString());
+            }
+
         }
     }
 }
