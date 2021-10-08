@@ -149,7 +149,7 @@ static void sum(int taskId, int start, int stop)
 			}
 			Data_Global[index] = 0;
 			index += 1;
-		}  
+		}
 	}
 
 	static void CreateThreads()
@@ -171,3 +171,67 @@ static void sum(int taskId, int start, int stop)
 
 ลองปรับให้ฟังค์ชัน sum() รับตัวแปรน้อยลง อาจจะช่วยลดเวลาเพราะไม่ต้องโยกข้อมูลข้าม function call เยอะ
 ผลลัพท์: ไม่ค่อยช่วยอะไรเท่าไร อาจจะเป็นเพราะไม่ได้เรียกใช้บ่อยมากหรือไม่ได้สำคัญมาก
+
+---
+
+พยายามลดการใช้ตัวแปร Global
+เอา Global_Sum ออก แล้วเปลี่ยนมาใช้ Local แทน
+
+```c#
+static void sum(int taskId, int start, int stop)
+{
+	int index = start;
+	int sum = 0;
+	Console.WriteLine("Thread {0} is working!", taskId);
+	while(index != stop) {
+		if (Data_Global[index] % 2 == 0)
+		{
+			sum -= Data_Global[index];
+		}
+		else if (Data_Global[index] % 3 == 0)
+		{
+			sum += (Data_Global[index]*2);
+		}
+		else if (Data_Global[index] % 5 == 0)
+		{
+			sum += (Data_Global[index] / 2);
+		}
+		else if (Data_Global[index] %7 == 0)
+		{
+			sum += (Data_Global[index] / 3);
+		}
+		Data_Global[index] = 0;
+		index += 1;
+	}
+	Sum_Global += sum;
+}
+```
+
+output
+
+```
+starting benchmark!
+
+cpu model name : AMD Ryzen 7 3750H with Radeon Vega Mobile Gfx
+Fri Oct  8 12:58:55 +07 2021
+----------------------------------------------------------------------------
+Test  1  Threads
+round 1  timeusage: 23004 888701676
+round 2  timeusage: 23497 888701676
+round 3  timeusage: 23097 888701676
+avg.  23199  ms
+
+----------------------------------------------------------------------------
+Test  2  Threads
+round 1  timeusage: 12281 888701676
+round 2  timeusage: 12819 888701676
+round 3  timeusage: 12010 888701676
+avg.  12370  ms
+
+----------------------------------------------------------------------------
+Test  4  Threads
+round 1  timeusage: 6329 888701676
+round 2  timeusage: 7044 888701676
+round 3  timeusage: 6675 888701676
+avg.  6682  ms
+```

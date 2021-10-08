@@ -22,8 +22,7 @@ namespace Problem01
         static int N = Constants.N;
         static int MAX = 1000000000;
         static byte[] Data_Global = new byte[1000000000];
-        static long[] Sum_Global = new long[Constants.N];
-        static int G_index = 0;
+        static long Sum_Global = 0;
         static int ReadData()
         {
             int returnData = 0;
@@ -46,38 +45,41 @@ namespace Problem01
 
             return returnData;
         }
-        static void sum(int taskId)
+        static void sum(int taskId, int start, int stop)
         {
-            int index = taskId * (MAX/N);
-            int stop  = (taskId+1) * (MAX/N);
-            Console.WriteLine("Spawning thread {0,-5} Start {1,-10} Stop {2,-10}", taskId, index, stop);
+            int index = start;
+            int sum = 0;
             Console.WriteLine("Thread {0} is working!", taskId);
             while(index != stop) {
                 if (Data_Global[index] % 2 == 0)
                 {
-                    Sum_Global[taskId] -= Data_Global[index];
+                    sum -= Data_Global[index];
                 }
                 else if (Data_Global[index] % 3 == 0)
                 {
-                    Sum_Global[taskId] += (Data_Global[index]*2);
+                    sum += (Data_Global[index]*2);
                 }
                 else if (Data_Global[index] % 5 == 0)
                 {
-                    Sum_Global[taskId] += (Data_Global[index] / 2);
+                    sum += (Data_Global[index] / 2);
                 }
                 else if (Data_Global[index] %7 == 0)
                 {
-                    Sum_Global[taskId] += (Data_Global[index] / 3);
+                    sum += (Data_Global[index] / 3);
                 }
                 Data_Global[index] = 0;
                 index += 1;
-            }  
+            } 
+            Sum_Global += sum;
         }
 
         static void CreateThreads()
         {
             int nThread = lstThreads.Count;
-            Thread th = new Thread(() => { sum(nThread); });
+            int start = nThread * (MAX/N);
+            int stop  = (nThread+1) * (MAX/N);
+            Console.WriteLine("Spawning thread {0,-5} Start {1,-10} Stop {2,-10}", nThread, start, stop);
+            Thread th = new Thread(() => { sum(nThread, start, stop); });
             th.Start();
             lstThreads.Add(th);
         }
@@ -88,7 +90,7 @@ namespace Problem01
             int i, y;
 
             /* Read data from file */
-            // Console.Clear();
+            Console.Clear();
 
             if(args.Count() == 1) {
                 N = int.Parse(args[0]);
@@ -121,12 +123,13 @@ namespace Problem01
             // Task.waitAll(t[0]);
 
             /* Result */
-            Console.WriteLine("Summation result: {0}", Sum_Global.Sum());
+            Console.WriteLine("Summation result: {0}", Sum_Global);
             Console.WriteLine("Time used: " + sw.ElapsedMilliseconds.ToString() + "ms");
             
             if(args.Count() == 1) {
                 using StreamWriter file = new("output.txt");
-                file.WriteLineAsync(sw.ElapsedMilliseconds.ToString());
+                String o = sw.ElapsedMilliseconds.ToString() + " " + Sum_Global.ToString();
+                file.WriteLineAsync(o);
             }
 
         }

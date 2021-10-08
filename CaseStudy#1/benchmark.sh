@@ -2,10 +2,10 @@
 reset
 
 now=`date`
-echo "\r\nstarting brenchmark!\r\n"
+echo "\r\nstarting benchmark!\r\n"
 echo "cpu" $(cat /proc/cpuinfo | grep "model name" -m 1)
 echo "$now"
-echo "\\r\\nCurrent date: $now " >> output.txt
+# echo "\\r\\nCurrent date: $now " >> output.txt
 
 for thread in 1 2 4; 
 do
@@ -17,8 +17,9 @@ do
         echo -n "round" $i " ";
         time1=$(dotnet run $thread);
         cur_time=$(cat output.txt);
-        sum=$((cur_time+sum));
-        echo timeusage: $cur_time ms;
+        echo timeusage: $cur_time;
+        s="${cur_time%% *}";
+        sum=$((s+sum));
     done
     echo "avg. " $((sum/3)) " ms\r\n";
 done
