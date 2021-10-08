@@ -23,7 +23,6 @@ namespace Problem01
         static int MAX = 1000000000;
         static byte[] Data_Global = new byte[1000000000];
         static long Sum_Global = 0;
-        static int G_index = 0;
         static int ReadData()
         {
             int returnData = 0;
@@ -129,7 +128,8 @@ namespace Problem01
             
             if(args.Count() == 1) {
                 using StreamWriter file = new("output.txt");
-                file.WriteLineAsync(sw.ElapsedMilliseconds.ToString());
+                String o = sw.ElapsedMilliseconds.ToString() + " " + Sum_Global.ToString();
+                file.WriteLineAsync(o);
             }
 
         }
