@@ -2,7 +2,7 @@
 reset
 
 now=`date`
-echo "\r\nstarting brenchmark!\r\n"
+echo "\r\nstarting benchmark!\r\n"
 echo "cpu" $(cat /proc/cpuinfo | grep "model name" -m 1)
 echo "$now"
 echo "\\r\\nCurrent date: $now " >> output.txt
