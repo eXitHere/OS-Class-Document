@@ -23,7 +23,7 @@ namespace Problem01
         static int MAX = 1000000000;
         static byte[] Data_Global = new byte[1000000000];
         // static long Sum_Global = 0;
-        static List<long> Sum_Global = new List<long>();
+        static long[] Sum_Global;
         static int ReadData()
         {
             int returnData = 0;
@@ -83,7 +83,6 @@ namespace Problem01
             Thread th = new Thread(() => { sum(nThread, start, stop); });
             th.Start();
             lstThreads.Add(th);
-            Sum_Global.Add(0);
         }
         static void Main(string[] args)
         {
@@ -97,6 +96,8 @@ namespace Problem01
             if(args.Count() == 1) {
                 N = int.Parse(args[0]);
             }
+
+            Sum_Global = new long[N];
 
             Console.Write("Data read...");
             y = ReadData();
@@ -130,7 +131,7 @@ namespace Problem01
             
             if(args.Count() == 1) {
                 using StreamWriter file = new("output.txt");
-                String o = sw.ElapsedMilliseconds.ToString() + " " + Sum_Global.ToString();
+                String o = sw.ElapsedMilliseconds.ToString() + " " + Sum_Global.Sum().ToString();
                 file.WriteLineAsync(o);
             }
 
