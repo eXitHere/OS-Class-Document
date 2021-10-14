@@ -22,7 +22,8 @@ namespace Problem01
         static int N = Constants.N;
         static int MAX = 1000000000;
         static byte[] Data_Global = new byte[1000000000];
-        static long Sum_Global = 0;
+        // static long Sum_Global = 0;
+        static List<long> Sum_Global = new List<long>();
         static int ReadData()
         {
             int returnData = 0;
@@ -70,7 +71,7 @@ namespace Problem01
                 Data_Global[index] = 0;
                 index += 1;
             } 
-            Sum_Global += sum;
+            Sum_Global[taskId] += sum;
         }
 
         static void CreateThreads()
@@ -82,6 +83,7 @@ namespace Problem01
             Thread th = new Thread(() => { sum(nThread, start, stop); });
             th.Start();
             lstThreads.Add(th);
+            Sum_Global.Add(0);
         }
         static void Main(string[] args)
         {
@@ -123,7 +125,7 @@ namespace Problem01
             // Task.waitAll(t[0]);
 
             /* Result */
-            Console.WriteLine("Summation result: {0}", Sum_Global);
+            Console.WriteLine("Summation result: {0}", Sum_Global.Sum());
             Console.WriteLine("Time used: " + sw.ElapsedMilliseconds.ToString() + "ms");
             
             if(args.Count() == 1) {
