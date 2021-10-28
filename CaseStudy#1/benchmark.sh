@@ -7,7 +7,7 @@ echo "cpu" $(cat /proc/cpuinfo | grep "model name" -m 1)
 echo "$now"
 # echo "\\r\\nCurrent date: $now " >> output.txt
 
-for thread in 1 2 4; 
+for thread in 1 2 4 8 16 32 64; 
 do
     echo "----------------------------------------------------------------------------"
     echo "Test " $thread " Threads"
@@ -23,3 +23,5 @@ do
     done
     echo "avg. " $((sum/3)) " ms\r\n";
 done
+
+
