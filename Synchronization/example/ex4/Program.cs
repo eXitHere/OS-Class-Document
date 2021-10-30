@@ -18,7 +18,6 @@ namespace OS_Sync_Ex_00
         {
           Console.WriteLine("X = {0}", x);
           Monitor.Wait(_lock);
-          // Monitor.Pulse(_lock);
         }
       }
       Console.WriteLine("Thread 1 exit");
